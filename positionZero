@@ -6,7 +6,7 @@ kit = ServoKit(channels=16)
 # Servo Dictionary
 RIGHT = {
     0: "shoulder_FB",
-    1: "shoulder_OI",
+    1: "shoulder_IO",
     2: "elbow",
     3: "wrist",
     4: "thumb",
@@ -18,7 +18,7 @@ RIGHT = {
 
 LEFT = {
     0: "shoulder_FB",
-    1: "shoulder_OI",
+    1: "shoulder_IO",
     2: "elbow",
     3: "wrist",
     4: "thumb",
@@ -27,6 +27,8 @@ LEFT = {
     7: "ring",
     8: "little"
 }
+
+#SERVO POSITIONS
 
 RIGHT_STANDARD_POSITION = {
     0: 102,
@@ -40,32 +42,54 @@ RIGHT_STANDARD_POSITION = {
     8: 90
 }
 
+RIGHT_PISTOLS_FIRING = {
+    0: 180,
+    1: 200,
+    2: 70,
+    3: 86,
+    4: 45,
+    5: 180,
+    6: 0,
+    7: 0,
+    8: 0
+}
+
+
+def set_servo_angle_slowly(channel, target_angle):
+    delay = 0.07
+    step = 8
+    try:
+        current_angle = kit.servo[channel].angle
+        if current_angle is None:  # If no previous angle, start from 0
+            current_angle = 0
+        # Determine the direction of movement
+        step = step if target_angle > current_angle else -step
+        # Gradually move the servo to the target angle
+        for angle in range(int(current_angle), int(target_angle), step):
+            kit.servo[channel].angle = angle
+            time.sleep(delay)
+        # Ensure the final position is set
+        kit.servo[channel].angle = target_angle
+    except Exception as e:
+        print(f"Error moving servo on channel {channel}: {e}")
+
 def position_standardzero():
-    for channel in range(16):
-        time.sleep(1)
-        try:
-            angle = RIGHT_STANDARD_POSITION.get(channel, 90)  # Default angle to 90 if not found
-            if channel in RIGHT_STANDARD_POSITION:
-                kit.servo[channel].angle = angle
-                limb_name = RIGHT.get(channel, "unknown")
-                print(f"Channel {channel} ({limb_name}) set to {angle}°")
-            else:
-                print(f"Channel {channel} has no defined standard position.")
-        except ValueError:
-            print(f"Channel {channel}: Could not set angle (may not be connected)")
+    for channel, target_angle in RIGHT_STANDARD_POSITION.items():
+        set_servo_angle_slowly(channel, target_angle)
+
+    print("Position Zero.")
 
 def pistols_firing():
-    # Rotate shoulder 90° right
-    # Rotate wrist 90° right
-    # Rotate elbow 130° up
-    # Close middle, ring, little fingers
-    # Thumb out 45°
+    for channel, target_angle in RIGHT_PISTOLS_FIRING.items():
+        set_servo_angle_slowly(channel, target_angle)
+
     print("Pistols Firing")
 
 def main():
-    print("Setting all servos to standard positions...")
     position_standardzero()
-    print("Done.")
+    pistols_firing()
+
+
 
 if __name__ == "__main__":
     main()
