@@ -1,0 +1,65 @@
+from adafruit_servokit import ServoKit
+kit = ServoKit(channels=16)
+#PWM 'pip install adafruit-circuitpython-servokit'
+
+#Servo Dictionary
+RIGHT = {
+    0: "shoulder_FB",
+    1: "shoulder_OI",
+    2: "wrist",
+    3: "thumb",
+    4: "pointer",
+    5: "middle",
+    6: "ring",
+    7: "little",
+    8: "_",
+    9: "_",
+    10: "_",
+}
+
+LEFT = {
+    0: "shoulder_FB",
+    1: "shoulder_OI",
+    2: "wrist",
+    3: "thumb",
+    4: "pointer",
+    5: "middle",
+    6: "ring",
+    7: "little",
+    8: "_",
+    9: "_",
+    10: "_",
+}
+
+def position_zero():
+    
+    for channel in range(16):
+        try:
+            #Right
+            kit.servo[channel].angle = 0  # Set the servo to 0°
+            limb_name = RIGHT.get(channel, "unknown")
+            print(f"Channel {channel} is the {limb_name}")
+            #Left
+            kit.servo[channel].angle = 0  # Set the servo to 0°
+            limb_name = LEFT.get(channel, "unknown")
+            print(f"Channel {channel} is the {limb_name}")
+        except ValueError:
+            print(f"Channel {channel}: Could not set angle (may not be connected)")
+
+def pistols_firing():
+    #rotate shoulder 90 right
+    #rotate wrist 90 right
+    #rotate elbow 130 up
+    #close middle, ring, little
+    #thumb out 45
+    print("Pistols Firing")
+
+
+def main():
+
+    print("Setting all servos to position 0")
+    position_zero()
+    print("Done")
+
+if __name__ == "__main__":
+    main()
