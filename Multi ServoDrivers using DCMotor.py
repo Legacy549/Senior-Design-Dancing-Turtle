@@ -12,8 +12,8 @@ from adafruit_motor import servo
 i2c = busio.I2C(board.SCL, board.SDA)
 
 # Initialize PCA9685 boards
-pca1 = adafruit_pca9685.PCA9685(i2c, address=0x40)  # First Servo Driver
-pca2 = adafruit_pca9685.PCA9685(i2c, address=0x41)  # Second Servo Driver
+pca1 = adafruit_pca9685.PCA9685(i2c, address=0x40)  # Left Servo Driver
+pca2 = adafruit_pca9685.PCA9685(i2c, address=0x41)  # Right Servo Driver
 
 # Set PWM frequency for both PCA9685 boards
 pca1.frequency = 50
@@ -23,49 +23,69 @@ pca2.frequency = 50
 right_servos = {i: servo.Servo(pca1.channels[i]) for i in range(16)}
 left_servos = {i: servo.Servo(pca2.channels[i]) for i in range(16)}
 
-# Servo Positions for Right Hand
-RIGHT_STANDARD_POSITION = {
-    0: 102,
-    1: 110,
-    2: 100,
-    3: 100,
-    4: 90,
-    5: 90,
-    6: 90,
-    7: 90,
-    8: 90
+# Servo Dictionary
+RIGHT = {
+    0: "shoulder_FB",
+    1: "shoulder_OI",
+    2: "elbow",
+    3: "wrist",
+    4: "thumb",
+    5: "pointer",
+    6: "middle",
+    7: "ring",
+    8: "little",
+    9: "hip_OI",
+    10: "hip_FB",
+    11: "knee"
 }
 
-RIGHT_PISTOLS_FIRING = {
+LEFT = {
+    0: "shoulder_FB",
+    1: "shoulder_OI",
+    2: "elbow",
+    3: "wrist",
+    4: "thumb",
+    5: "pointer",
+    6: "middle",
+    7: "ring",
+    8: "little",
+     9: "hip_OI",
+    10: "hip_FB",
+    11: "knee"
+}
+
+RIGHT_STANDARD_POSITION = {
     0: 180,
-    1: 200,
-    2: 70,
-    3: 86,
-    4: 45,
-    5: 180,
+    1: 180,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
     6: 0,
     7: 0,
-    8: 0
+    8: 0,
+    9: 0,
+    10:0,
+    11:0
 }
 
-# Servo Positions for Left Hand
 LEFT_STANDARD_POSITION = {
-    0: 80,
-    1: 95,
-    2: 110,
-    3: 90,
-    4: 75,
-    5: 100,
-    6: 85,
-    7: 95,
-    8: 80
+    0: 180,
+    1: 180,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+    8: 0,
+    9: 0,
+    10:0,
+    11:0
 }
 
 
 def set_servo_angle_slowly(servo_obj, target_angle):
-    """
-    Moves a servo gradually to the target angle.
-    """
     delay = 0.07
     step = 8
 
@@ -88,16 +108,20 @@ def set_servo_angle_slowly(servo_obj, target_angle):
         print(f"Error moving servo: {e}")
 
 
-def position_standardzero():
-    """Moves the RIGHT servos (PCA9685-1) and LEFT servos (PCA9685-2) to their standard positions."""
-    for channel, target_angle in RIGHT_STANDARD_POSITION.items():
-        set_servo_angle_slowly(right_servos[channel], target_angle)
-
-    for channel, target_angle in LEFT_STANDARD_POSITION.items():
-        set_servo_angle_slowly(left_servos[channel], target_angle)
-
-    print("Position Zero (Standard) set.")
-
+def moveServos(move_list):
+    for channel in range(16):
+        time.sleep(0.5)
+        try:
+            angle = move_list.get(channel, 90)  # Default angle to 90 if not found
+            if channel in move_list:
+                kit.servo[channel].angle = angle
+                limb_name = RIGHT.get(channel, "unknown")
+                print(f"Channel {channel} ({limb_name}) set to {angle}°")
+            else:
+                print(f"Channel {channel} has no defined standard position.")
+        except ValueError:
+            print(f"Channel {channel}: Could not set angle (may not be connected)")
+    
 
 def pistols_firing():
     """Moves the RIGHT servos to the PISTOLS FIRING position."""
@@ -108,8 +132,8 @@ def pistols_firing():
 
 
 def main():
-    position_standardzero()
-    pistols_firing()
+    moveServos(RIGHT_STANDARD_POSITION)
+    
 
 
 if __name__ == "__main__":
