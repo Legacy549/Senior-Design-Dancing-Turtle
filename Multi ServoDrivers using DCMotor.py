@@ -7,9 +7,17 @@ import board
 import busio
 import adafruit_pca9685
 from adafruit_motor import servo
+from adafruit_servokit import ServoKit
+
+kit = ServoKit(channels=16)
 
 # Create I2C bus
 i2c = busio.I2C(board.SCL, board.SDA)
+while not i2c.try_lock():
+    pass
+devices = i2c.scan()
+print("Devices found: ", devices)
+i2c.unlock()
 
 # Initialize PCA9685 boards
 pca1 = adafruit_pca9685.PCA9685(i2c, address=0x40)  # Left Servo Driver
@@ -107,12 +115,18 @@ def set_servo_angle_slowly(servo_obj, target_angle):
     except Exception as e:
         print(f"Error moving servo: {e}")
 
+def move_all_servos():
+    for channel, angle in RIGHT_STANDARD_POSITION.items():
+        right_servos[channel].angle = angle
 
-def moveServos(move_list):
+    for channel, angle in LEFT_STANDARD_POSITION.items():
+        left_servos[channel].angle = angle
+
+def moveServos_first(move_list):
     for channel in range(16):
         time.sleep(0.5)
         try:
-            angle = move_list.get(channel, 90)  # Default angle to 90 if not found
+            angle = move_list.get(channel, 0)  # Default angle to 90 if not found
             if channel in move_list:
                 kit.servo[channel].angle = angle
                 limb_name = RIGHT.get(channel, "unknown")
@@ -122,17 +136,38 @@ def moveServos(move_list):
         except ValueError:
             print(f"Channel {channel}: Could not set angle (may not be connected)")
     
+def moveServos(move_list):
+    for channel in range(16):
+        time.sleep(0.5)
+        try:
+            # Default angle to 90 if not found in move_list
+            angle = move_list.get(channel, 0)  # Default angle to 0 if not defined
+            if channel in move_list:
+                # Determine whether the channel is for the right or left servo driver
+                if channel < 8:  # Assuming channels 0-7 are for the right driver
+                    right_servos[channel].angle = angle
+                    limb_name = RIGHT.get(channel, "unknown")
+                    print(f"Right - Channel {channel} ({limb_name}) set to {angle}°")
+                else:  # Assuming channels 8-15 are for the left driver
+                    left_servos[channel - 8].angle = angle
+                    limb_name = LEFT.get(channel - 8, "unknown")
+                    print(f"Left - Channel {channel} ({limb_name}) set to {angle}°")
+            else:
+                print(f"Channel {channel} has no defined standard position.")
+        except ValueError:
+            print(f"Channel {channel}: Could not set angle (may not be connected)")
 
-def pistols_firing():
-    """Moves the RIGHT servos to the PISTOLS FIRING position."""
-    for channel, target_angle in RIGHT_PISTOLS_FIRING.items():
-        set_servo_angle_slowly(right_servos[channel], target_angle)
+
+
 
     print("Pistols Firing pose set.")
 
 
+
+
 def main():
     moveServos(RIGHT_STANDARD_POSITION)
+    moveServos(LEFT_STANDARD_POSITION)
     
 
 
