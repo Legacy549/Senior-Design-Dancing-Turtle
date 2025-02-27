@@ -35,8 +35,8 @@ LEFT = {
 }
 
 RIGHT_STANDARD_POSITION = {
-    0: 0,
-    1: 0,
+    0: 180,
+    1: 180,
     2: 0,
     3: 0,
     4: 0,
@@ -50,8 +50,8 @@ RIGHT_STANDARD_POSITION = {
 }
 
 LEFT_STANDARD_POSITION = {
-    0: 0,
-    1: 0,
+    0: 180,
+    1: 180,
     2: 0,
     3: 0,
     4: 0,
