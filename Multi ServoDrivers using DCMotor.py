@@ -115,43 +115,29 @@ def set_servo_angle_slowly(servo_obj, target_angle):
     except Exception as e:
         print(f"Error moving servo: {e}")
 
-def move_all_servos():
-    for channel, angle in RIGHT_STANDARD_POSITION.items():
-        right_servos[channel].angle = angle
-
-    for channel, angle in LEFT_STANDARD_POSITION.items():
-        left_servos[channel].angle = angle
-
-def moveServos_first(move_list):
+def moveRightServos(move_list):
     for channel in range(16):
         time.sleep(0.5)
         try:
-            angle = move_list.get(channel, 0)  # Default angle to 90 if not found
+            angle = move_list.get(channel, 0)  # Default angle to 0 if not found
             if channel in move_list:
-                kit.servo[channel].angle = angle
+                right_servos[channel].angle = angle
                 limb_name = RIGHT.get(channel, "unknown")
                 print(f"Channel {channel} ({limb_name}) set to {angle}°")
             else:
                 print(f"Channel {channel} has no defined standard position.")
         except ValueError:
             print(f"Channel {channel}: Could not set angle (may not be connected)")
-    
-def moveServos(move_list):
+
+def moveLeftServos(move_list):
     for channel in range(16):
         time.sleep(0.5)
         try:
-            # Default angle to 90 if not found in move_list
-            angle = move_list.get(channel, 0)  # Default angle to 0 if not defined
+            angle = move_list.get(channel, 0)  # Default angle to 0 if not found
             if channel in move_list:
-                # Determine whether the channel is for the right or left servo driver
-                if channel < 8:  # Assuming channels 0-7 are for the right driver
-                    right_servos[channel].angle = angle
-                    limb_name = RIGHT.get(channel, "unknown")
-                    print(f"Right - Channel {channel} ({limb_name}) set to {angle}°")
-                else:  # Assuming channels 8-15 are for the left driver
-                    left_servos[channel - 8].angle = angle
-                    limb_name = LEFT.get(channel - 8, "unknown")
-                    print(f"Left - Channel {channel} ({limb_name}) set to {angle}°")
+                left_servos[channel].angle = angle
+                limb_name = LEFT.get(channel, "unknown")
+                print(f"Channel {channel} ({limb_name}) set to {angle}°")
             else:
                 print(f"Channel {channel} has no defined standard position.")
         except ValueError:
@@ -159,17 +145,12 @@ def moveServos(move_list):
 
 
 
-
-    print("Pistols Firing pose set.")
-
-
-
-
 def main():
-    moveServos(RIGHT_STANDARD_POSITION)
-    moveServos(LEFT_STANDARD_POSITION)
+    moveRightServos(RIGHT_STANDARD_POSITION)
+    moveLeftServos(LEFT_STANDARD_POSITION)
     
 
 
 if __name__ == "__main__":
     main()
+
