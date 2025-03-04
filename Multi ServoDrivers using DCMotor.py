@@ -42,8 +42,8 @@ RIGHT = {
     6: "middle",
     7: "ring",
     8: "little",
-    9: "hip_OI",
-    10: "hip_FB",
+    9: "hip_FB",
+    10: "hip_OI",
     11: "knee"
 }
 
@@ -57,8 +57,8 @@ LEFT = {
     6: "middle",
     7: "ring",
     8: "little",
-     9: "hip_OI",
-    10: "hip_FB",
+    9: "hip_FB",
+    10: "hip_OI",
     11: "knee"
 }
 
@@ -92,25 +92,14 @@ LEFT_STANDARD_POSITION = {
     11:0
 }
 
-RIGHT_LEGS_WALK = {
-    9: 0,
-    10:0,
-    11:0
-}
-
-LEFT_LEGS_WALK = {
-    9: 0,
-    10:0,
-    11:0
-}
-
-
 def set_servo_angle_slowly(servo_obj, target_angle):
     delay = 0.025
     step = 5
 
     try:
         current_angle = servo_obj.angle
+        if current_angle is None:  # If no previous angle, start from 0
+            current_angle = 0
 
         # Determine the direction of movement
         step = step if target_angle > current_angle else -step
@@ -151,21 +140,44 @@ def leftServos(move_list):
         except ValueError:
             print(f"Channel {channel}: Could not set angle (may not be connected)")
 
+def alternate_servo_movement(servo1, target1, servo2, target2):
+    delay = 0.07
+    step = 8
+    
+    current1 = servo1.angle if servo1.angle is not None else 0
+    current2 = servo2.angle if servo2.angle is not None else 0
+    
+    step1 = step if target1 > current1 else -step
+    step2 = step if target2 > current2 else -step
+    
+    while current1 != target1 or current2 != target2:
+        if current1 != target1:
+            next_angle1 = min(target1, current1 + step1) if step1 > 0 else max(target1, current1 + step1)
+            servo1.angle = next_angle1
+            current1 = next_angle1
+            time.sleep(delay)
+        
+        if current2 != target2:
+            next_angle2 = min(target2, current2 + step2) if step2 > 0 else max(target2, current2 + step2)
+            servo2.angle = next_angle2
+            current2 = next_angle2
+            time.sleep(delay)
+
 def walkLegs():
-    rightServos(RIGHT_LEGS_WALK)
-    time.sleep(0.25)
-    rightServos(RIGHT_STANDARD_POSITION)
-    time.sleep(0.25)
-    leftServos(LEFT_LEGS_WALK)
-    time.sleep(0.25)
-    leftServos(LEFT_STANDARD_POSITION)
+   #Legs--> 9 is FB & 11 is knee
+   for x in range(3):
+    alternate_servo_movement(right_servos[11], 50, right_servos[9], 50)
+    alternate_servo_movement(right_servos[11], 0, right_servos[9], 0)
+
+    alternate_servo_movement(left_servos[11], 50, left_servos[9], 50)
+    alternate_servo_movement(left_servos[11], 0, left_servos[9], 0)
 
 
-
-
+        
 def main():
-    moveServos(RIGHT_STANDARD_POSITION)
-    #moveServos(LEFT_STANDARD_POSITION)
+    walkLegs()
+    rightServos(RIGHT_STANDARD_POSITION)
+    leftServos(LEFT_STANDARD_POSITION)
     
 
 
