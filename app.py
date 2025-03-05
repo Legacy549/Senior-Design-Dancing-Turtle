@@ -9,30 +9,6 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 socketio = SocketIO(app)
 
-# Initialize video capture (0 is the default camera)
-cap = cv2.VideoCapture(0)
-
-if not cap.isOpened():
-    print("Error: Could not open camera")
-
-
-def video_stream():
-    while True:
-        ret, frame = cap.read()
-        if ret:
-            _, buffer = cv2.imencode('.jpg', frame)
-            if buffer is not None:
-                frame_bytes = buffer.tobytes()
-                frame_b64 = base64.b64encode(frame_bytes).decode('utf-8')
-                socketio.emit('video_frame', {'data': frame_b64})
-        time.sleep(0.03)
-
-
-# Start video streaming in a separate thread
-thread = threading.Thread(target=video_stream)
-thread.daemon = True
-thread.start()
-
 PASSWORD = 'turtle'
 
 
