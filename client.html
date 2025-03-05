@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control Panel</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <style>
+        /* Set background color to match login page */
         body {
             background-color: #90EE90;
+            /* Light green background */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -18,22 +21,21 @@
             cursor: pointer;
         }
 
-        /* Ensure body takes full height in fullscreen mode */
-        body:fullscreen, #buttons:fullscreen {
-            height: 100%;
-        }
-
-        /* Button container (bottom half of the screen) */
+        /* Styling for button container (Bottom half of the screen) */
         #buttons {
             width: 100%;
             height: 50%;
+            /* Buttons take the bottom half of the screen */
             position: relative;
+            /* Used to position buttons absolutely */
         }
 
+        /* CSS for Hexagonal Buttons */
         .hex-button {
             width: 100px;
             height: 58px;
             background-color: #4CAF50;
+            /* Default Button Color: Green */
             border: none;
             color: white;
             font-size: 14px;
@@ -52,26 +54,110 @@
             transform: scale(1.1);
         }
 
+        /* Special Button Styles */
         .tracking {
             background-color: yellow;
             width: 150px;
+            /* Twice the size of the others */
             height: 200px;
+            top: 250px;
+            left: 400px;
+            color: black;
+            /* Change text color to black */
+        }
+
+        .orange {
+            background-color: orange;
+        }
+
+        .green {
+            background-color: #4CAF50;
+            /* Green remains as default */
+            width: 80px;
+            /* Adjust the width to make it narrower */
+            height: 58px;
+        }
+
+        .pink {
+            background-color: #FF69B4;
+            /* More intense pink (Hot Pink) */
+        }
+
+        .blue {
+            background-color: blue;
+        }
+
+        .white {
+            background-color: white;
+            color: black;
+            /* White button with black text */
+            width: 150px;
+            /* Adjust the width to make it narrower */
+            height: 150px;
+        }
+
+        /* Position buttons at specific locations */
+        .tracking {
             top: 100px;
             left: 450px;
-            color: black;
         }
-        .option2 { top: 70px; left: 570px; }
-        .option1 { top: 70px; left: 380px; }
-        .idle { top: 120px; left: 100px; }
-        .button1 { top: 270px; left: 380px; }
-        .button3 { top: 675px; left: 550px; }
-        .button4 { top: 270px; left: 570px; }
-        .button5 { top: 20px; left: 483px; }
-        .button6 { top: 270px; left: 570px; }
-        .button7 { top: 270px; left: 570px; }
+
+        .option2 {
+            top: 70px;
+            left: 570px;
+            /* Position of Option 2 (formerly orange button 2) */
+        }
+
+        .option1 {
+            top: 70px;
+            left: 380px;
+            /* Position of Option 1 (formerly pink button 4) */
+        }
+
+        .idle {
+            top: 120px;
+            left: 100px;
+            /* Position of Idle Button (formerly white button 6) */
+        }
+
+        .button1 {
+            /*opt3*/
+            top: 270px;
+            left: 380px;
+        }
+
+        .button3 {
+            top: 675px;
+            left: 550px;
+        }
+
+        .button4 {
+            /*button5*/
+            top: 270px;
+            left: 570px;
+        }
+
+        .button5 {
+            /*button6*/
+            top: 20px;
+            left: 483px;
+        }
+
+        .button6 {
+            /*???*/
+            top: 270px;
+            left: 570px;
+        }
+
+        .button7 {
+            /*???*/
+            top: 270px;
+            left: 570px;
+        }
     </style>
 </head>
-<body>
+
+<body onclick="enterFullScreen()">
     <!-- Video Stream -->
     <div id="video-container">
         <img id="video" />
@@ -79,7 +165,10 @@
 
     <!-- 7 Custom Hexagonal Buttons -->
     <div id="buttons">
+        <!-- Tracking Button (Twice the Size) -->
         <button class="hex-button tracking" onclick="sendButtonPress('tracking')">Tracking</button>
+
+        <!-- Default Size Buttons -->
         <button class="hex-button orange option2" onclick="sendButtonPress('Option2')">Option 2</button>
         <button class="hex-button orange button1" onclick="sendButtonPress('Option3')">Option3</button>
         <button class="hex-button pink option1" onclick="sendButtonPress('Option1')">Option 1</button>
@@ -88,13 +177,11 @@
         <button class="hex-button white idle" onclick="sendButtonPress('Idle')">Idle</button>
     </div>
 
-    <!-- Fullscreen Button -->
-    <button onclick="enterFullScreen()">Go Fullscreen</button>
-
     <script type="text/javascript">
+        // Connect to Socket.IO server
         var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-        // Send button press event to the server
+        // Send button press event to the server when a button is clicked
         function sendButtonPress(buttonName) {
             console.log('Button pressed: ' + buttonName);
             socket.emit('button_press', { button: buttonName });
@@ -102,17 +189,17 @@
 
         // Function to request fullscreen
         function enterFullScreen() {
-            var element = document.body; // Use the body as the target element
-            if (element.requestFullscreen) {
-                element.requestFullscreen();
-            } else if (element.mozRequestFullScreen) { // Firefox
-                element.mozRequestFullScreen();
-            } else if (element.webkitRequestFullscreen) { // Chrome, Safari
-                element.webkitRequestFullscreen();
-            } else if (element.msRequestFullscreen) { // IE/Edge
-                element.msRequestFullscreen();
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                document.documentElement.msRequestFullscreen();
             }
         }
     </script>
 </body>
+
 </html>
