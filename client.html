@@ -20,23 +20,6 @@
             justify-content: flex-start;
         }
 
-        /* Styling for video container (Top half of the screen) */
-        #video-container {
-            width: 100%;
-            height: 50%;
-            /* Video takes the top half of the screen */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: black;
-        }
-
-        #video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* Ensures the video covers the area without distortion */
-        }
 
         /* Styling for button container (Bottom half of the screen) */
         #buttons {
@@ -199,18 +182,6 @@
         // Connect to Socket.IO server
         var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-        // Handle receiving video frames
-        socket.on('video_frame', function (data) {
-            if (data && data.data) {
-                var image = new Image();
-                image.src = 'data:image/jpeg;base64,' + data.data;
-                image.onload = function () {
-                    document.getElementById('video').src = image.src;
-                };
-            } else {
-                console.log("Received empty or invalid frame data.");
-            }
-        });
 
         // Send button press event to the server when a button is clicked
         function sendButtonPress(buttonName) {
