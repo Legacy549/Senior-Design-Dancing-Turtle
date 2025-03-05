@@ -6,7 +6,6 @@
     <title>Control Panel</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <style>
-        /* Set background color to match login page */
         body {
             background-color: #90EE90;
             font-family: Arial, sans-serif;
@@ -20,18 +19,17 @@
         }
 
         /* Ensure body takes full height in fullscreen mode */
-        body:fullscreen {
+        body:fullscreen, #buttons:fullscreen {
             height: 100%;
         }
 
-        /* Styling for button container (Bottom half of the screen) */
+        /* Button container (bottom half of the screen) */
         #buttons {
             width: 100%;
             height: 50%;
             position: relative;
         }
 
-        /* Hexagonal Button Styles */
         .hex-button {
             width: 100px;
             height: 58px;
@@ -54,7 +52,6 @@
             transform: scale(1.1);
         }
 
-        /* Button-specific styles */
         .tracking {
             background-color: yellow;
             width: 150px;
@@ -105,14 +102,15 @@
 
         // Function to request fullscreen
         function enterFullScreen() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-                document.documentElement.msRequestFullscreen();
+            var element = document.body; // Use the body as the target element
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) { // Firefox
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) { // Chrome, Safari
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) { // IE/Edge
+                element.msRequestFullscreen();
             }
         }
     </script>
