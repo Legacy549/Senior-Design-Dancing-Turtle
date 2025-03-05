@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, emit
-import cv2
-import base64
-import time
-import threading
+import os
 
-app = Flask(__name__)
+# Specify the path to the directory where your HTML files are now located
+# '.' is the current directory
+app = Flask(__name__, template_folder=os.path.abspath('.'))
+
 app.secret_key = 'your_secret_key'
 socketio = SocketIO(app)
 
