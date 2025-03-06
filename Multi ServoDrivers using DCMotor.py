@@ -172,18 +172,18 @@ def walkLegs():
     alternate_servo_movement(left_servos[11], 0, left_servos[9], 0)
 
 def lineDance():
-    #two taps forward -> FB up and down
-    alternate_servo_movement(right_servos[9], 55, right_servos[11, 10])
-    alternate_servo_movement(right_servos[9], 45, right_servos[11, 0])
-    alternate_servo_movement(right_servos[9], 55, right_servos[11, 10])
-    alternate_servo_movement(right_servos[9], 45, right_servos[11, 0])
-    alternate_servo_movement(right_servos[9], 0, right_servos[11, 0])
-    #two taps back
-    alternate_servo_movement(right_servos[9], 0, right_servos[11, 30])
-    alternate_servo_movement(right_servos[9], 0, right_servos[11, 15])
-    alternate_servo_movement(right_servos[9], 0, right_servos[11, 30])
-    alternate_servo_movement(right_servos[9], 0, right_servos[11, 15])
-    alternate_servo_movement(right_servos[9], 0, right_servos[11, 0])
+    #right and left forward twice
+    for x in range(2):
+        alternate_servo_movement(right_servos[9], 55, right_servos[11], 20)
+        alternate_servo_movement(right_servos[9], 0, right_servos[11], 0)
+        time.sleep(0.25)
+        alternate_servo_movement(left_servos[9], 55, left_servos[11], 20)
+        alternate_servo_movement(left_servos[9], 0, left_servos[11], 0)
+    #right out, in
+    alternate_servo_movement(right_servos[9], 90, right_servos[11], 0)
+    alternate_servo_movement(right_servos[10], 90, right_servos[11], 0)
+    alternate_servo_movement(right_servos[10], 0, right_servos[9], 0)
+
     
 
 
