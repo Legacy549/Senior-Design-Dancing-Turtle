@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Panel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        /* Set up the particles container */
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* Ensure the particles stay behind the content */
+        }
+
+        /* Set background color to match the green background from the first file */
+        body {
+            background-color: #2E8B57;
+            /* Dark green color */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            cursor: pointer;
+        }
+
+        #buttons {
+            position: relative;
+            width: 1200px;
+            /* Larger container to fit the buttons properly */
+            height: 600px;
+            /* Adjust the height to fit the rows */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        /* CSS Variables for easy customization */
+        :root {
+            --default-button-color: #4CAF50;
+            --default-hover-color: #45a049;
+            --button-width: 300px;
+            --button-height: 300px;
+            --font-size: 40px;
+            --font-weight: bold;
+            --button-text-color: white;
+        }
+
+        /* Hexagonal Buttons */
+        .hex-button {
+            width: var(--button-width);
+            height: var(--button-height);
+            background-color: var(--default-button-color);
+            border: none;
+            color: var(--button-text-color);
+            font-size: var(--font-size);
+            text-align: center;
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            text-transform: uppercase;
+            font-weight: var(--font-weight);
+            outline: none;
+            transition: transform 0.3s ease;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .hex-button:hover {
+            background-color: var(--default-hover-color);
+            transform: scale(1.1);
+        }
+
+        /* Button Specific Color Customization */
+        #button1 {
+            background-color: #FFFFFF;
+            color: black;
+        }
+
+        #button2 {
+            background-color: #FFD700;
+        }
+
+        #button3 {
+            background-color: #FF6347;
+        }
+
+        #button4 {
+            background-color: #87CEEB;
+        }
+
+        #button5 {
+            background-color: #32CD32;
+        }
+
+        #button6 {
+            background-color: #8A2BE2;
+        }
+
+        #button7 {
+            background-color: #FF4500;
+        }
+
+        #button8 {
+            background-color: #DAA520;
+        }
+
+        /* Offset for the first row */
+        .row-offset-left {
+            margin-left: -200px;
+            /* Move the first row 200px to the left */
+        }
+
+        /* Offset for the second row */
+        .row-offset-right {
+            margin-left: 125px;
+            /* Offset the second row by 120px */
+            margin-top: -75px;
+            /* Move the second row 100px up */
+        }
+    </style>
+</head>
+
+<body onclick="enterFullScreen()">
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Button Container with two rows of buttons -->
+    <div id="buttons">
+        <!-- First Row of Buttons with Offset to the Left -->
+        <div class="button-row row-offset-left">
+            <button class="hex-button" id="button1" onclick="sendButtonPress('button1')">Button 1</button>
+            <button class="hex-button" id="button2" onclick="sendButtonPress('button2')">Button 2</button>
+            <button class="hex-button" id="button3" onclick="sendButtonPress('button3')">Button 3</button>
+            <button class="hex-button" id="button4" onclick="sendButtonPress('button4')">Button 4</button>
+        </div>
+
+        <!-- Second Row of Buttons with Offset to the Right and Moved Up -->
+        <div class="button-row row-offset-right">
+            <button class="hex-button" id="button5" onclick="sendButtonPress('button5')">Button 5</button>
+            <button class="hex-button" id="button6" onclick="sendButtonPress('button6')">Button 6</button>
+            <button class="hex-button" id="button7" onclick="sendButtonPress('button7')">Button 7</button>
+            <button class="hex-button" id="button8" onclick="sendButtonPress('button8')">Button 8</button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // Connect to Socket.IO server
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // Send button press event to the server when a button is clicked
+        function sendButtonPress(buttonName) {
+            console.log('Button pressed: ' + buttonName);
+            socket.emit('button_press', { button: buttonName });
+        }
+
+        // Initialize particles.js with custom settings
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 20 },  /* Reduced the number of particles */
+                size: { value: 2 },  /* Smaller particles */
+                move: { speed: 0.8 },  /* Slower movement */
+                opacity: { value: 0.3 }, /* Semi-transparent particles */
+                color: { value: "#FFFFFF" }
+            },
+            interactivity: {
+                events: {
+                    onhover: { enable: true, mode: "repulse" }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
