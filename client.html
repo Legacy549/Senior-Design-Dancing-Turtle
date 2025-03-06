@@ -7,10 +7,8 @@
     <title>Control Panel</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <style>
-        /* Set background color to match login page */
         body {
             background-color: #90EE90;
-            /* Light green background */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -21,21 +19,16 @@
             cursor: pointer;
         }
 
-        /* Styling for button container (Bottom half of the screen) */
         #buttons {
             width: 100%;
             height: 50%;
-            /* Buttons take the bottom half of the screen */
             position: relative;
-            /* Used to position buttons absolutely */
         }
 
-        /* CSS for Hexagonal Buttons */
         .hex-button {
             width: 100px;
             height: 58px;
             background-color: #4CAF50;
-            /* Default Button Color: Green */
             border: none;
             color: white;
             font-size: 14px;
@@ -54,16 +47,14 @@
             transform: scale(1.1);
         }
 
-        /* Special Button Styles */
+        /* Special Button info */
         .tracking {
             background-color: yellow;
             width: 150px;
-            /* Twice the size of the others */
             height: 200px;
             top: 250px;
             left: 400px;
             color: black;
-            /* Change text color to black */
         }
 
         .orange {
@@ -72,15 +63,12 @@
 
         .green {
             background-color: #4CAF50;
-            /* Green remains as default */
             width: 80px;
-            /* Adjust the width to make it narrower */
             height: 58px;
         }
 
         .pink {
             background-color: #FF69B4;
-            /* More intense pink (Hot Pink) */
         }
 
         .blue {
@@ -90,13 +78,11 @@
         .white {
             background-color: white;
             color: black;
-            /* White button with black text */
             width: 150px;
-            /* Adjust the width to make it narrower */
             height: 150px;
         }
 
-        /* Position buttons at specific locations */
+        /* Button Positions */
         .tracking {
             top: 100px;
             left: 450px;
@@ -105,19 +91,16 @@
         .option2 {
             top: 70px;
             left: 570px;
-            /* Position of Option 2 (formerly orange button 2) */
         }
 
         .option1 {
             top: 70px;
             left: 380px;
-            /* Position of Option 1 (formerly pink button 4) */
         }
 
         .idle {
             top: 120px;
             left: 100px;
-            /* Position of Idle Button (formerly white button 6) */
         }
 
         .button1 {
@@ -163,9 +146,9 @@
         <img id="video" />
     </div>
 
-    <!-- 7 Custom Hexagonal Buttons -->
+    <!-- 7 Hexagon Buttons -->
     <div id="buttons">
-        <!-- Tracking Button (Twice the Size) -->
+        <!-- Tracking Button -->
         <button class="hex-button tracking" onclick="sendButtonPress('tracking')">Tracking</button>
 
         <!-- Default Size Buttons -->
