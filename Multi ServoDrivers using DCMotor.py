@@ -166,16 +166,32 @@ def alternate_servo_movement(servo1, target1, servo2, target2):
 def walkLegs():
    #Legs--> 9 is FB & 11 is knee
    for x in range(3):
-    alternate_servo_movement(right_servos[11], 50, right_servos[9], 50)
+    alternate_servo_movement(right_servos[11], 90, right_servos[9], 90)
     alternate_servo_movement(right_servos[11], 0, right_servos[9], 0)
-
-    alternate_servo_movement(left_servos[11], 50, left_servos[9], 50)
+    alternate_servo_movement(left_servos[11], 90, left_servos[9], 90)
     alternate_servo_movement(left_servos[11], 0, left_servos[9], 0)
+
+def lineDance():
+    #two taps forward -> FB up and down
+    alternate_servo_movement(right_servos[9], 55, right_servos[11, 10])
+    alternate_servo_movement(right_servos[9], 45, right_servos[11, 0])
+    alternate_servo_movement(right_servos[9], 55, right_servos[11, 10])
+    alternate_servo_movement(right_servos[9], 45, right_servos[11, 0])
+    alternate_servo_movement(right_servos[9], 0, right_servos[11, 0])
+    #two taps back
+    alternate_servo_movement(right_servos[9], 0, right_servos[11, 30])
+    alternate_servo_movement(right_servos[9], 0, right_servos[11, 15])
+    alternate_servo_movement(right_servos[9], 0, right_servos[11, 30])
+    alternate_servo_movement(right_servos[9], 0, right_servos[11, 15])
+    alternate_servo_movement(right_servos[9], 0, right_servos[11, 0])
+    
 
 
         
 def main():
     walkLegs()
+    time.sleep(0.5)
+    lineDance()
     rightServos(RIGHT_STANDARD_POSITION)
     leftServos(LEFT_STANDARD_POSITION)
     
