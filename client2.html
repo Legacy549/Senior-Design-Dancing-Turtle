@@ -6,11 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control Panel</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
-        /* Set background color to match login page */
+        /* Particles container */
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
         body {
-            background-color: #90EE90;
-            /* Light green background */
+            background-color: #2E8B57;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -19,162 +28,133 @@
             height: 100vh;
             justify-content: flex-start;
             cursor: pointer;
+            position: relative;
         }
 
-        /* Styling for button container (Bottom half of the screen) */
         #buttons {
             width: 100%;
-            height: 50%;
-            /* Buttons take the bottom half of the screen */
+            height: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
             position: relative;
-            /* Used to position buttons absolutely */
         }
 
-        /* CSS for Hexagonal Buttons */
+        .button-row {
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+        }
+
+        :root {
+            --default-button-color: #4CAF50;
+            --default-hover-color: #45a049;
+            --button-width: 300px;
+            --button-height: 300px;
+            --font-size: 58px;
+            --font-weight: bold;
+            --button-text-color: white;
+        }
+
         .hex-button {
-            width: 100px;
-            height: 58px;
-            background-color: #4CAF50;
-            /* Default Button Color: Green */
+            width: var(--button-width);
+            height: var(--button-height);
+            background-color: var(--default-button-color);
             border: none;
-            color: white;
-            font-size: 28px;
+            color: var(--button-text-color);
+            font-size: var(--font-size);
             text-align: center;
             cursor: pointer;
             display: inline-block;
-            position: absolute;
+            position: relative;
             text-transform: uppercase;
-            font-weight: bold;
+            font-weight: var(--font-weight);
             outline: none;
             transition: transform 0.3s ease;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
         }
 
         .hex-button:hover {
-            transform: scale(1.1);
+            background-color: var(--default-hover-color);
+            transform: scale(1.05);
         }
 
-        /* Special Button Styles */
-        .tracking {
-            background-color: yellow;
-            width: 150px;
-            /* Twice the size of the others */
-            height: 200px;
-            top: 250px;
-            left: 400px;
+        #button1 {
+            background-color: #FFFFFF;
             color: black;
-            /* Change text color to black */
+            top: 50px;
+            left: -150px;
         }
 
-        .orange {
-            background-color: orange;
+        #button2 {
+            background-color: #FFD700;
+            top: 50px;
+            left: -300px;
         }
 
-        .green {
-            background-color: #4CAF50;
-            /* Green remains as default */
-            width: 80px;
-            /* Adjust the width to make it narrower */
-            height: 58px;
+        #button3 {
+            background-color: #FF6347;
+            top: 50px;
+            left: -450px;
         }
 
-        .pink {
-            background-color: #FF69B4;
-            /* More intense pink (Hot Pink) */
+        #button4 {
+            background-color: #87CEEB;
+            top: -250px;
+            left: 775px;
         }
 
-        .blue {
-            background-color: blue;
+        #button5 {
+            background-color: #32CD32;
+            top: -15px;
+            left: -455px;
         }
 
-        .white {
-            background-color: white;
-            color: black;
-            /* White button with black text */
-            width: 300px;
-            /* Adjust the width to make it narrower */
-            height: 300px;
+        #button6 {
+            background-color: #8A2BE2;
+            top: -15px;
+            left: -605px;
         }
 
-        /* Position buttons at specific locations */
-        .tracking {
-            top: 100px;
-            left: 450px;
+        #button7 {
+            background-color: #FF4500;
+            top: -15px;
+            left: -755px;
         }
 
-        .option2 {
-            top: 70px;
-            left: 570px;
-            /* Position of Option 2 (formerly orange button 2) */
-        }
-
-        .option1 {
-            top: 70px;
-            left: 380px;
-            /* Position of Option 1 (formerly pink button 4) */
-        }
-
-        .idle {
-            top: 120px;
-            left: 100px;
-            /* Position of Idle Button (formerly white button 6) */
-        }
-
-        .button1 {
-            /*opt3*/
-            top: 270px;
-            left: 380px;
-        }
-
-        .button3 {
-            top: 675px;
-            left: 550px;
-        }
-
-        .button4 {
-            /*button5*/
-            top: 270px;
-            left: 570px;
-        }
-
-        .button5 {
-            /*button6*/
-            top: 20px;
-            left: 483px;
-        }
-
-        .button6 {
-            /*???*/
-            top: 270px;
-            left: 570px;
-        }
-
-        .button7 {
-            /*???*/
-            top: 270px;
-            left: 570px;
+        #button8 {
+            background-color: #DAA520;
+            top: -250px;
+            left: 1100px;
         }
     </style>
 </head>
 
 <body onclick="enterFullScreen()">
-    <!-- Video Stream -->
-    <div id="video-container">
-        <img id="video" />
-    </div>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
 
-    <!-- 7 Custom Hexagonal Buttons -->
     <div id="buttons">
-        <!-- Tracking Button (Twice the Size) -->
-        <button class="hex-button tracking" onclick="sendButtonPress('tracking')">Tracking</button>
+        <!-- First Row of Buttons -->
+        <div class="button-row">
+            <button class="hex-button" id="button1" onclick="sendButtonPress('button1')">Button 1</button>
+            <button class="hex-button" id="button2" onclick="sendButtonPress('button2')">Button 2</button>
+            <button class="hex-button" id="button3" onclick="sendButtonPress('button3')">Button 3</button>
+        </div>
 
-        <!-- Default Size Buttons -->
-        <button class="hex-button orange option2" onclick="sendButtonPress('Option2')">Option 2</button>
-        <button class="hex-button orange button1" onclick="sendButtonPress('Option3')">Option3</button>
-        <button class="hex-button pink option1" onclick="sendButtonPress('Option1')">Option 1</button>
-        <button class="hex-button blue button4" onclick="sendButtonPress('Button5')">Button 5</button>
-        <button class="hex-button green button5" onclick="sendButtonPress('Talk')">Talk</button>
-        <button class="hex-button white idle" onclick="sendButtonPress('Idle')">Idle</button>
+        <!-- Second Row of Buttons -->
+        <div class="button-row">
+            <button class="hex-button" id="button4" onclick="sendButtonPress('button4')">Button 4</button>
+            <button class="hex-button" id="button5" onclick="sendButtonPress('button5')">Button 5</button>
+            <button class="hex-button" id="button6" onclick="sendButtonPress('button6')">Button 6</button>
+        </div>
+
+        <!-- Third Row of Buttons -->
+        <div class="button-row">
+            <button class="hex-button" id="button7" onclick="sendButtonPress('button7')">Button 7</button>
+            <button class="hex-button" id="button8" onclick="sendButtonPress('button8')">Button 8</button>
+        </div>
     </div>
 
     <script type="text/javascript">
@@ -187,7 +167,28 @@
             socket.emit('button_press', { button: buttonName });
         }
 
-
+        // Initialize particles.js with custom settings for image particles
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 30 },
+                size: { value: 20 },
+                move: { speed: 0.8 },
+                opacity: { value: 0.7 },
+                shape: {
+                    type: 'image',
+                    image: {
+                        src: 'turtle2.png',  // Correct relative path
+                        width: 50,  // Width of the image particle
+                        height: 50  // Height of the image particle
+                    }
+                }
+            },
+            interactivity: {
+                events: {
+                    onhover: { enable: true, mode: "repulse" }
+                }
+            }
+        });
     </script>
 </body>
 
